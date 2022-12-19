@@ -1,5 +1,5 @@
 # Extended Kalman Filter in JAX
-Extended Kalman Filter(EKF) code written in Python using JAX library. JAX is essentially JAX with autodiff. For EKF, JAX is especially useful for calculating jacobian through `jax.numpy.jacfwd`. There is also a EKF code written with Numpy instead of JAX, where jacobian matrix has to calculated by hand and then be explicitly given as argument in the code.
+Implementation of Extended Kalman Filter(EKF) using JAX library. JAX is used for its ability to automatically calculate jacobian through `jax.numpy.jacfwd`. There is also a EKF code written with Numpy instead of JAX, where jacobian matrix has to be calculated by hand and then be explicitly given as argument in the code. This code was created as an assignment from lecture DEEE0728-001(Statistical inference and machine learning) in KNUEE.
 
 ![](README_asset/track.PNG)
 
