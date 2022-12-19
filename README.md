@@ -41,21 +41,21 @@ At each time step, the EKF proceeds through the following steps:
 
 1. **Prediction step**: The EKF predicts the state of the system at the current time step based on the previous state and the linearized system model. This prediction is given by:
 
-    $$ \hat{x}_k = A\hat{x}_{k-1} $$
+$$ \hat{x}_k = A\hat{x}_{k-1} $$
 
     where $A$ is the linearized state transition matrix and $\hat{x}_{k-1}$ is the current estimate of the state.
 
 2. **Correction step**: The EKF then updates the predicted state based on the measurement of the system state at the current time step. The updated estimate is given by:
 
-    $$ \hat{x}_k = \hat{x}_k + K_k(y_k - H\hat{x}_k) $$
+$$ \hat{x}_k = \hat{x}_k + K_k(y_k - H\hat{x}_k) $$
 
     where $K_k$ is the Kalman gain at time step $k$, which is given by:
 
-    $$ K_k = P_kH^T(HP_kH^T + R)^{-1} $$
+$$ K_k = P_kH^T(HP_kH^T + R)^{-1} $$
 
     and $P_k$ is the state covariance matrix at time step $k$, which is given by:
 
-    $$ P_k = AP_{k-1}A^T + Q $$
+$$ P_k = AP_{k-1}A^T + Q $$
 
     Here, $y_k$ is the measurement of the system state at time step $k$, $H$ is the linearized measurement matrix, $Q$ is the process noise covariance matrix, and $R$ is the measurement noise covariance matrix.
 
