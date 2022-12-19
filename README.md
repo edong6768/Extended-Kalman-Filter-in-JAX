@@ -40,11 +40,13 @@ With these linearized models, we can proceed with the Kalman filter as usual, us
 At each time step, the EKF proceeds through the following steps:
 
 1. **Prediction step**: The EKF predicts the state of the system at the current time step based on the previous state and the linearized system model. This prediction is given by:
+
 $$ \hat{x}_k = A\hat{x}_{k-1} $$
 
 where $A$ is the linearized state transition matrix and $\hat{x}_{k-1}$ is the current estimate of the state.
 
 2. **Correction step**: The EKF then updates the predicted state based on the measurement of the system state at the current time step. The updated estimate is given by:
+
 $$ \hat{x}_k = \hat{x}_k + K_k(y_k - H\hat{x}_k) $$
 
 where $K_k$ is the Kalman gain at time step $k$, which is given by:
