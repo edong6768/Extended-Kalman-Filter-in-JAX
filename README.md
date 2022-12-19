@@ -1,6 +1,8 @@
 # Extended Kalman Filter in JAX
 Extended Kalman Filter Simulation code written in Python using JAX library. JAX is essentially JAX with autodiff. For EKF, JAX is especially useful for calculating jacobian through `jax.numpy.jacfwd`.
 
+![](README_asset/track.PNG)
+
 ## Dependencies
 - jax 0.3.14
 - matplotlib 3.5.3

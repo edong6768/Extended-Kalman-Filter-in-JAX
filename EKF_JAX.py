@@ -87,7 +87,7 @@ if __name__=='__main__':
 
     # plot
     plt.subplot(221)
-    plt.plot(*states.T[:2], '.-', label='real')
+    plt.plot(*states.T[:2], '.-', label='ground')
     plt.plot(*preds.T[:2], '.-', label='pred')
     plt.plot(*[[0]]*2, 'kx', mew=2)
     plt.legend()
