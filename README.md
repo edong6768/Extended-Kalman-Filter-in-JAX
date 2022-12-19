@@ -1,5 +1,5 @@
 # Extended Kalman Filter in JAX
-Extended Kalman Filter Simulation code written in Python using JAX library. JAX is essentially JAX with autodiff. For EKF, JAX is especially useful for calculating jacobian through `jax.numpy.jacfwd`.
+Extended Kalman Filter(EKF) code written in Python using JAX library. JAX is essentially JAX with autodiff. For EKF, JAX is especially useful for calculating jacobian through `jax.numpy.jacfwd`. There is also a EKF code written with Numpy instead of JAX, where jacobian matrix has to calculated by hand and then be explicitly given as argument in the code.
 
 ![](README_asset/track.PNG)
 
@@ -7,8 +7,8 @@ Extended Kalman Filter Simulation code written in Python using JAX library. JAX 
 - jax 0.3.14
 - matplotlib 3.5.3
 - tqdm
-
-## Mechanism
+- numpy (for numpy version of EKF)
+## Mechanism of Extended Kalman Filter
 The extended Kalman filter (EKF) is a widely used algorithm for estimating the state of a dynamic system when the system and measurement models are non-linear. It allows for the incorporation of non-linear models into the Kalman filter framework by linearizing the models around the current estimate of the state.
 
 Consider a non-linear system model of the form:
