@@ -43,20 +43,20 @@ At each time step, the EKF proceeds through the following steps:
 
 $$ \hat{x}_k = A\hat{x}_{k-1} $$
 
-    where $A$ is the linearized state transition matrix and $\hat{x}_{k-1}$ is the current estimate of the state.
+where $A$ is the linearized state transition matrix and $\hat{x}_{k-1}$ is the current estimate of the state.
 
 2. **Correction step**: The EKF then updates the predicted state based on the measurement of the system state at the current time step. The updated estimate is given by:
 
 $$ \hat{x}_k = \hat{x}_k + K_k(y_k - H\hat{x}_k) $$
 
-    where $K_k$ is the Kalman gain at time step $k$, which is given by:
+where $K_k$ is the Kalman gain at time step $k$, which is given by:
 
 $$ K_k = P_kH^T(HP_kH^T + R)^{-1} $$
 
-    and $P_k$ is the state covariance matrix at time step $k$, which is given by:
+and $P_k$ is the state covariance matrix at time step $k$, which is given by:
 
 $$ P_k = AP_{k-1}A^T + Q $$
 
-    Here, $y_k$ is the measurement of the system state at time step $k$, $H$ is the linearized measurement matrix, $Q$ is the process noise covariance matrix, and $R$ is the measurement noise covariance matrix.
+Here, $y_k$ is the measurement of the system state at time step $k$, $H$ is the linearized measurement matrix, $Q$ is the process noise covariance matrix, and $R$ is the measurement noise covariance matrix.
 
 One important consideration when using the extended Kalman filter is the choice of the process and measurement noise covariances, $Q$ and $R$. In the linear Kalman filter, these covariances can be chosen based on the knowledge of the noise characteristics of the system and measurements. However, in the non-linear case, the choice of these covariances can have a significant impact on the performance of the EKF. In general, it is recommended to choose these covariances based on the uncertainty in the linearized models, rather than the uncertainty in the true non-linear models.
