@@ -27,7 +27,7 @@ The extended Kalman filter (EKF) is a widely used algorithm for estimating the s
     <td>$y_1, ..., y_k$ (given measurements $y_1\sim y_k$)</td>
   </tr>
   <tr>
-    <th>$\hat{x}_{k:k-1}$</th>
+    <th>$\hat{x}_{k|k-1}$</th>
     <td>$\hat{x}_k|y_{1:k}$ (estimated $\hat{x}^k$ given $y_1\sim y_k$)</td>
   </tr>
 </table>
