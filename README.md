@@ -8,20 +8,50 @@ Implementation of Extended Kalman Filter(EKF) using JAX library. JAX is used for
 - matplotlib 3.5.3
 - tqdm
 - numpy (for numpy version of EKF)
+
 ## Mechanism of Extended Kalman Filter
 The extended Kalman filter (EKF) is a widely used algorithm for estimating the state of a dynamic system when the system and measurement models are non-linear. It allows for the incorporation of non-linear models into the Kalman filter framework by linearizing the models around the current estimate of the state.
 
+#### notations:
+<table>
+  <tr>
+    <th>$x_k$</th>
+    <td>state at time k</td>
+  </tr>
+  <tr>
+    <th>$y_k$</th>
+    <td>measurement at time k</td>
+  </tr>
+  <tr>
+    <th>$y_{1:k}$</th>
+    <td>$y_1, ..., y_k$ (given measurements $y_1\sim y_k$)</td>
+  </tr>
+  <tr>
+    <th>$\hat{x}_{k:k-1}$</th>
+    <td>$\hat{x}_k|y_{1:k}$ (estimated $\hat{x}^k$ given $y_1\sim y_k$)</td>
+  </tr>
+</table>
+
+### Non-Linear Model
+
+**State Transition**|$x_k = f(x_{k-1}) + w_{k}$
+|-|-|
+**Measurement**|$y_k = h(x_{k}) + v_{k}$
+
+where $f(\cdot)$ and $h(\cdot)$ are non-linear functions and distribution of noise terms are given as $w\sim\mathcal{N}(0, Q)$ and $v\sim\mathcal{N}(0, R)$. In order to use the Kalman filter, we must linearize this model around the current estimate of the state, $\hat{x}_{k-1}$. 
+
+### Linearize
 Consider a non-linear system model of the form:
 
-$$ x_k = f(x_{k-1}) + w_{k-1} $$
+$$x_k = f(x_{k-1}) + w_{k}$$
 
-where $f(\cdot)$ is a non-linear function. In order to use the Kalman filter, we must linearize this model around the current estimate of the state, $\hat{x}_{k-1}$. This linearized model is given by:
+This linearized model is given by:
 
 $$ x_k \approx A\hat{x}_{k-1} + w_{k-1} $$
 
 where $A$ is the Jacobian of the non-linear function $f(\cdot)$ evaluated at the current estimate of the state:
 
-$$ A = \frac{\partial f}{\partial x}(\hat{x}_{k-1}) $$
+$$ A = \frac{\partial f}{\partial x}(\hat{x} _{k-1|k-1}) $$
 
 Similarly, consider a non-linear measurement model of the form:
 
@@ -33,30 +63,24 @@ $$ y_k \approx H\hat{x}_k + v_k $$
 
 where $H$ is the Jacobian of the non-linear function $h(\cdot)$ evaluated at the current estimate of the state:
 
-$$ H = \frac{\partial h}{\partial x}(\hat{x}_k) $$
+$$ H = \frac{\partial h}{\partial x}(\hat{x} _{k|k-1}) $$
 
 With these linearized models, we can proceed with the Kalman filter as usual, using the prediction and correction steps described below.
 
-At each time step, the EKF proceeds through the following steps:
+### extended Kalman Filter algorithm
+At each time step, the EKF trys to predict state estimation $\hat{x}_k$ and state covariance matrix $P_k$ through the following steps:
 
-1. **Prediction step**: The EKF predicts the state of the system at the current time step based on the previous state and the linearized system model. This prediction is given by:
+<table>
+  <tr>
+    <td><strong>Prediction step</strong><br />(before measurement $y_k$)</td>
+    <td>Predict $x_k$ given only $y _{1:k-1}$<br />$$\hat{x} _{k|k-1} = f(\hat{x} _{k-1|k-1})$$ $$P _{k|k-1} = AP _{k-1|k-1}A^T+Q$$</td>
+  </tr>
+  <tr>
+    <td><strong>Correction step</strong><br />(after measurement $y_k$)</td>
+    <td>Correct $x_k$ with additional measurement $y_k$<br />$$\hat{x} _{k|k} = \hat{x} _{k|k-1} + K_k(y_k - H\hat{x} _{k|k-1})$$ $$P _{k|k} = P _{k|k-1}-K_kHP _{k|k-1}$$ where $K_k$ is the Kalman gain at time step $k$, which is given by:<br />$K_k = P_{k|k-1}H^T(HP_{k|k-1}H^T + R)^{-1}$</td>
+  </tr>
+</table>
 
-$$ \hat{x}_k = A\hat{x}_{k-1} $$
-
-where $A$ is the linearized state transition matrix and $\hat{x}_{k-1}$ is the current estimate of the state.
-
-2. **Correction step**: The EKF then updates the predicted state based on the measurement of the system state at the current time step. The updated estimate is given by:
-
-$$ \hat{x}_k = \hat{x}_k + K_k(y_k - H\hat{x}_k) $$
-
-where $K_k$ is the Kalman gain at time step $k$, which is given by:
-
-$$ K_k = P_kH^T(HP_kH^T + R)^{-1} $$
-
-and $P_k$ is the state covariance matrix at time step $k$, which is given by:
-
-$$ P_k = AP_{k-1}A^T + Q $$
-
-Here, $y_k$ is the measurement of the system state at time step $k$, $H$ is the linearized measurement matrix, $Q$ is the process noise covariance matrix, and $R$ is the measurement noise covariance matrix.
+Here, $A$ is the linearized state transition matrix, $H$ is the linearized measurement matrix, $Q$ is the state transition noise covariance matrix, and $R$ is the measurement noise covariance matrix.
 
 One important consideration when using the extended Kalman filter is the choice of the process and measurement noise covariances, $Q$ and $R$. In the linear Kalman filter, these covariances can be chosen based on the knowledge of the noise characteristics of the system and measurements. However, in the non-linear case, the choice of these covariances can have a significant impact on the performance of the EKF. In general, it is recommended to choose these covariances based on the uncertainty in the linearized models, rather than the uncertainty in the true non-linear models.
