@@ -77,7 +77,7 @@ At each time step, the EKF trys to predict state estimation $\hat{x}_k$ and stat
   </tr>
   <tr>
     <td><strong>Correction step</strong><br />(after measurement $y_k$)</td>
-    <td>Correct $x_k$ with additional measurement $y_k$<br />$$\hat{x} _{k|k} = \hat{x} _{k|k-1} + K_k(y_k - H\hat{x} _{k|k-1})$$ $$P _{k|k} = P _{k|k-1}-K_kHP _{k|k-1}$$ where $K_k$ is the Kalman gain at time step $k$, which is given by:<br />$K_k = P_{k|k-1}H^T(HP_{k|k-1}H^T + R)^{-1}$</td>
+    <td>Correct $x_k$ with additional measurement $y_k$<br />$$\hat{x} _{k|k} = \hat{x} _{k|k-1} + K_k(y_k - h(\hat{x} _{k|k-1}))$$ $$P _{k|k} = P _{k|k-1}-K_kHP _{k|k-1}$$ where $K_k$ is the Kalman gain at time step $k$, which is given by:<br />$K_k = P_{k|k-1}H^T(HP_{k|k-1}H^T + R)^{-1}$</td>
   </tr>
 </table>
 
