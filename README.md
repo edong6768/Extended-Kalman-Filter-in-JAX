@@ -41,14 +41,22 @@ $$
 $$
 
 $$
-\Sigma_{FX} = F\ \Sigma_X\ F^T
+VAR[FX] = F\ VAR[X]\ F^T
 $$
 
-(2) Mean/Covariance matrix of sum of normally distributed random variable $X \sim \mathcal{N}(\mu_x, \Sigma_x)$, $Y \sim \mathcal{N}(\mu_x, \Sigma_y)$
+where $VAR[X]$ is a covariance matrix of $X$
+
+(2) Mean/Covariance matrix of sum of vector random variable $X$, $Y$
 
 $$
-X+Y \sim \mathcal{N}(\mu_x+\mu_y, \Sigma_x + \Sigma_y)
+\mathbb{E}[X+Y] = \mathbb{E}[X] + \mathbb{E}[Y]
 $$
+
+$$
+VAR[X+Y] = VAR[X] + 2\ cov(X, Y) + VAR[Y]
+$$
+
+where $cov(X, Y)$ is a cross-covariance matrix of $X$ and $Y$.
 
 (3) Conditional Gaussian
 
