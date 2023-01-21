@@ -34,33 +34,28 @@ The Kalman filter iteratively estimates the state from measurements of linear sy
 </table>
 
 #### Formulas used:
-1. Mean/Variance of random variable $X$ under multiplication of matrix $F$
+(1) Mean/Variance of random variable $X$ under multiplication of matrix $F$
+
 $$
-\begin{equation}
 \mathbb{E}[FX] = F(\mathbb{E}[X])
-\end{equation}
 $$
 
 $$
-\begin{equation}
 VAR[FX] = F\ VAR[X]\ F^T
-\end{equation}
 $$
 
-2. Mean/Variance of sum of random variable $X$, $Y$
+(2) Mean/Variance of sum of random variable $X$, $Y$
+
 $$
-\begin{equation}
 \mathbb{E}[X+Y] = \mathbb{E}[X] + \mathbb{E}[Y]
-\end{equation}
 $$
 
 $$
-\begin{equation}
 VAR[X+Y] = VAR[X] + VAR[Y] + 2\ cov(X,Y)
-\end{equation}
 $$
 
-3. Conditional Gaussian
+(3) Conditional Gaussian
+
 $$
 given \begin{bmatrix}x \\ y \end{bmatrix} \sim \mathcal{N} 
 \left( \begin{bmatrix}\mu_x \\ \mu_y \end{bmatrix},
@@ -68,10 +63,8 @@ given \begin{bmatrix}x \\ y \end{bmatrix} \sim \mathcal{N}
 $$
 
 $$
-\begin{equation}
 x|y \sim \mathcal{N} \left(\ \mu_x +P_{xy}P_{yy}^{-1}(y-\mu_y),\ 
 P_{xx}-P_{xy}P_{yy}^{-1}P_{yx}\ \right)
-\end{equation}
 $$
 
 ### Linear Model
@@ -85,48 +78,70 @@ Assume no covariance between $w$, $v$ ( $\mathbb{E}[w^Tv]=0$. )
 ### Kalman Filter Derivation
 Kalman filter essentially updates the posterior distribution of the state for each measurements same as **Density Propagation**, then use **Bayesian Optimal Estimator(Posterior Mean)** to estimate the current state of the system.
 
-Let previous posterior as $x_{k-1|k-1} \sim \mathcal{N}(\hat{x}_{k-1|k-1}, P_{k-1|k-1})$
-1. Prediction step (before new measurement) :\
-    From state transition model
-    $$
-    x_{k|k-1}=Fx_{k-1|k-1}+w_{k}
-    $$
-    Using formula $(1)$~$(4)$
-    $$
-    x_{k|k-1} \sim \mathcal{N}\left( \hat{x}_{k|k-1}, P_{k|k-1}\right)
-    = \mathcal{N} \left( F\hat{x}_{k-1|k-1}\ ,\ FP_{k-1|k-1}F^T+Q\right)\\
-    $$
-2. Correction step (after new measurement) :\
-    From measurement model
-    $$
-    y_{k|k-1}=Hx_{k|k-1}+v_k
-    $$
-    Using formula $(1)$~$(4)$
-    $$
-    y_{k|k-1} \sim \mathcal{N}\left( \hat{y}_{k|k-1}, S_k\right)
-    = \mathcal{N} \left( H\hat{x}_{k|k-1}\ ,\ HP_{k|k-1}H^T+R \right)
-    $$
-    Joint distribution of $x_{k|k-1}$ and $y_{k|k-1}$ then will be
-    $$
-    P\left( \begin{bmatrix}x_k \\ y_k \end{bmatrix} |\ y_{1:k-1} \right) 
-    = \mathcal{N}\left( \begin{bmatrix}\hat{x}_{k|k-1} \\ \hat{y}_{k|k-1} \end{bmatrix},\ 
-    \begin{bmatrix}P_{k|k-1} & P_{k|k-1}H^T\\\  HP_{k|k-1}^T & S_k\ \end{bmatrix}\right)
-    $$
-    Using formala $(5)$
-    $$
-    x_{k|k} \sim \mathcal{N} \left(\ \hat{x}_{k|k-1}+P_{k|k-1}H^TS_k^{-1}(y_k-\hat{y}_{k|k-1}),\ 
-    P_{k|k-1}-(P_{k|k-1}H^T)S_k^{-1}(HP_{k|k-1}^T)\ \right)
-    $$
-    We call term $P_{k|k-1}H^TS_k^{-1}$ a Kalman gain $K_k$. Substituting gives
-    $$
-    x_{k|k} \sim \mathcal{N} (\hat{x}_{k|k}, P_{k|k})
-    $$
-    where
-    $$
-    \hat{x}_{k|k} = \hat{x}_{k|k-1}+K_k(y_k-\hat{y}_{k|k-1})\\
-    P_{k|k} = P_{k|k-1}-K_kHP_{k|k-1}
-    $$
-    Here we discard transpose in $P_{k|k-1}^T$ since covariance matrices are symmetric.
+Let previous posterior as 
+
+$$x_{k-1|k-1} \sim \mathcal{N}(\hat{x}_{k-1|k-1}, P_{k-1|k-1})$$
+
+#### 1) Prediction step (before new measurement) :
+From state transition model
+
+$$
+x_{k|k-1}=Fx_{k-1|k-1}+w_{k}
+$$
+
+Using formula (1), (2)
+
+$$
+x_{k|k-1} \sim \mathcal{N}\left( \hat{x}_{k|k-1}, P_{k|k-1}\right)
+= \mathcal{N} \left( F\hat{x}_{k-1|k-1}\ ,\ FP_{k-1|k-1}F^T+Q\right)\\
+$$
+
+#### 2) Correction step (after new measurement) :
+From measurement model
+    
+$$
+y_{k|k-1}=Hx_{k|k-1}+v_k
+$$
+
+Using formula (1), (2)
+    
+$$
+y_{k|k-1} \sim \mathcal{N}\left( \hat{y}_{k|k-1}, S_k\right)
+= \mathcal{N} \left( H\hat{x}_{k|k-1}\ ,\ HP_{k|k-1}H^T+R \right)
+$$
+
+Joint distribution of $x_{k|k-1}$ and $y_{k|k-1}$ then will be
+
+$$
+P\left( \begin{bmatrix} x_k \\ y_k \end{bmatrix} |\ y_{1:k-1} \right) 
+= \mathcal{N}\left( \begin{bmatrix}\hat{x}_{k|k-1} \\ \hat{y}_{k|k-1} \end{bmatrix},\ 
+\begin{bmatrix}P_{k|k-1} & P_{k|k-1}H^T\\\  HP_{k|k-1}^T & S_k\ \end{bmatrix}\right)
+$$
+
+Using formala (3)
+
+$$
+x_{k|k} \sim \mathcal{N} \left(\ \hat{x}_{k|k-1}+P_{k|k-1}H^TS_k^{-1}(y_k-\hat{y}_{k|k-1}),\ 
+P_{k|k-1}-(P_{k|k-1}H^T)S_k^{-1}(HP_{k|k-1}^T)\ \right)
+$$
+
+We call term $P_{k|k-1}H^TS_k^{-1}$ a Kalman gain $K_k$. Substituting gives
+
+$$
+x_{k|k} \sim \mathcal{N} (\hat{x}_{k|k}, P_{k|k})
+$$
+
+where
+
+$$
+\hat{x}_{k|k} = \hat{x}_{k|k-1}+K_k(y_k-\hat{y}_{k|k-1})
+$$
+
+$$
+P_{k|k} = P_{k|k-1}-K_kHP_{k|k-1}
+$$
+
+Here we discard transpose in $P_{k|k-1}^T$ since covariance matrices are symmetric.
 
 ### Kalman Filter Algorithm
 At each time step, the KF trys to predict state estimation $\hat{x}_k$ and state covariance matrix $P_k$ through the following steps:
