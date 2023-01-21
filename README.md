@@ -57,9 +57,20 @@ $$
 (3) Conditional Gaussian
 
 $$
-given \begin{bmatrix}x \\ y \end{bmatrix} \sim \mathcal{N} 
-\left( \begin{bmatrix}\mu_x \\ \mu_y \end{bmatrix},
-\begin{bmatrix}P_{xx} & P_{xy}\\ P_{yx} & P_{yy} \end{bmatrix}\right)
+given 
+\begin{bmatrix} 
+x \\
+y 
+\end{bmatrix} \sim \mathcal{N} 
+\left( 
+\begin{bmatrix} 
+\mu_x \\
+\mu_y
+\end{bmatrix},
+\begin{bmatrix} 
+P_{xx} & P_{xy} \\
+P_{yx} & P_{yy}\end{bmatrix}
+\right)
 $$
 
 $$
@@ -113,9 +124,20 @@ $$
 Joint distribution of $x_{k|k-1}$ and $y_{k|k-1}$ then will be
 
 $$
-P\left( \begin{bmatrix} x_k \\ y_k \end{bmatrix} |\ y_{1:k-1} \right) 
-= \mathcal{N}\left( \begin{bmatrix}\hat{x}_{k|k-1} \\ \hat{y}_{k|k-1} \end{bmatrix},\ 
-\begin{bmatrix}P_{k|k-1} & P_{k|k-1}H^T\\\  HP_{k|k-1}^T & S_k\ \end{bmatrix}\right)
+P\left( \left.
+\begin{bmatrix} 
+x_k \\
+y_k
+\end{bmatrix} \right| \ y_{1:k-1} \right) 
+= \mathcal{N}\left( 
+\begin{bmatrix}
+\hat{x}_{k|k-1} \\
+\hat{y}_{k|k-1} 
+\end{bmatrix},\ 
+\begin{bmatrix}
+P_{k|k-1} & P_{k|k-1}H^T\\
+\  HP_{k|k-1}^T & S_k\ 
+\end{bmatrix}\right)
 $$
 
 Using formala (3)
