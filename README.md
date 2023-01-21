@@ -34,24 +34,20 @@ The Kalman filter iteratively estimates the state from measurements of linear sy
 </table>
 
 #### Formulas used:
-(1) Mean/Variance of random variable $X$ under multiplication of matrix $F$
+(1) Mean/Covariance matrix of vector random variable $X$ under multiplication of matrix $F$
 
 $$
 \mathbb{E}[FX] = F(\mathbb{E}[X])
 $$
 
 $$
-VAR[FX] = F\ VAR[X]\ F^T
+\Sigma_{FX} = F\ \Sigma_X\ F^T
 $$
 
-(2) Mean/Variance of sum of random variable $X$, $Y$
+(2) Mean/Covariance matrix of sum of normally distributed random variable $X \sim \mathcal{N}(\mu_x, \Sigma_x)$, $Y \sim \mathcal{N}(\mu_x, \Sigma_y)$
 
 $$
-\mathbb{E}[X+Y] = \mathbb{E}[X] + \mathbb{E}[Y]
-$$
-
-$$
-VAR[X+Y] = VAR[X] + VAR[Y] + 2\ cov(X,Y)
+X+Y \sim \mathcal{N}(\mu_x+\mu_y, \Sigma_x + \Sigma_y)
 $$
 
 (3) Conditional Gaussian
