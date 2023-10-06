@@ -28,8 +28,8 @@ The Kalman filter iteratively estimates the state from measurements of linear sy
     <td>$y_1, ..., y_k$ (given measurements $y_1\sim y_k$)</td>
   </tr>
   <tr>
-    <th>$\hat{x}_{k|k-1}$</th>
-    <td>$\hat{x}_k|y_{1:k}$ (estimated $\hat{x}^k$ given $y_1\sim y_k$)</td>
+    <th>$\hat{x}_ {k|k-1}$</th>
+    <td>$\hat{x}_ k|y_{1:k}$ (estimated $\hat{x}^k$ given $y_1\sim y_k$)</td>
   </tr>
 </table>
 
@@ -41,7 +41,7 @@ $$
 $$
 
 $$
-VAR[FX] = F\ VAR[X]\ F^T
+VAR[FX] = F\ VAR[X]\ F^\top
 $$
 
 where $VAR[X]$ is a covariance matrix of $X$
@@ -88,14 +88,16 @@ $$
 **Measurement**|$y_k = Hx_{k} + v_{k}$
 
 where $F$ and $H$ are matrices and distribution of noise terms are given as $w\sim\mathcal{N}(0, Q)$ and $v\sim\mathcal{N}(0, R)$.
-Assume no covariance between $w$, $v$ ( $\mathbb{E}[w^Tv]=0$. )
+Assume no covariance between $w$, $v$ ( $\mathbb{E}[w^\top v]=0$. )
 
 ### Kalman Filter Derivation
 Kalman filter essentially updates the posterior distribution of the state for each measurements same as **Density Propagation**, then use **Bayesian Optimal Estimator(Posterior Mean)** to estimate the current state of the system.
 
-Let previous posterior as 
+Let the previous posterior as 
 
-$$x_{k-1|k-1} \sim \mathcal{N}(\hat{x}_{k-1|k-1}, P_{k-1|k-1})$$
+$$
+x_{k-1|k-1} \sim \mathcal{N}(\hat{x}_ {k-1|k-1}, P_{k-1|k-1})
+$$
 
 #### 1) Prediction step (before new measurement) :
 From state transition model
@@ -107,8 +109,8 @@ $$
 Using formula (1), (2)
 
 $$
-x_{k|k-1} \sim \mathcal{N}\left( \hat{x}_{k|k-1}, P_{k|k-1}\right)
-= \mathcal{N} \left( F\hat{x}_{k-1|k-1}\ ,\ FP_{k-1|k-1}F^T+Q\right)\\
+x_{k|k-1} \sim \mathcal{N}\left( \hat{x}_ {k|k-1}, P_{k|k-1}\right)
+= \mathcal{N} \left( F\hat{x}_ {k-1|k-1}\ ,\ FP_{k-1|k-1}F^\top+Q\right)\\
 $$
 
 #### 2) Correction step (after new measurement) :
@@ -121,8 +123,8 @@ $$
 Using formula (1), (2)
     
 $$
-y_{k|k-1} \sim \mathcal{N}\left( \hat{y}_{k|k-1}, S_k\right)
-= \mathcal{N} \left( H\hat{x}_{k|k-1}\ ,\ HP_{k|k-1}H^T+R \right)
+y_{k|k-1} \sim \mathcal{N}\left( \hat{y}_   {k|k-1}, S_k\right)
+= \mathcal{N} \left( H\hat{x}_ {k|k-1}\ ,\ HP_{k|k-1}H^\top+R \right)
 $$
 
 Joint distribution of $x_{k|k-1}$ and $y_{k|k-1}$ then will be
@@ -135,51 +137,51 @@ y_k
 \end{bmatrix} \right| \ y_{1:k-1} \right) 
 = \mathcal{N}\left( 
 \begin{bmatrix}
-\hat{x}_{k|k-1} \\
-\hat{y}_{k|k-1} 
+\hat{x}_ {k|k-1} \\
+\hat{y}_   {k|k-1} 
 \end{bmatrix},\ 
 \begin{bmatrix}
-P_{k|k-1} & P_{k|k-1}H^T\\
-\  HP_{k|k-1}^T & S_k\ 
+P_{k|k-1} & P_{k|k-1}H^\top\\
+\  HP_{k|k-1}^\top & S_k\ 
 \end{bmatrix}\right)
 $$
 
 Using formala (3)
 
 $$
-x_{k|k} \sim \mathcal{N} \left(\ \hat{x}_{k|k-1}+P_{k|k-1}H^TS_k^{-1}(y_k-\hat{y}_{k|k-1}),\ 
-P_{k|k-1}-(P_{k|k-1}H^T)S_k^{-1}(HP_{k|k-1}^T)\ \right)
+x_{k|k} \sim \mathcal{N} \left(\ \hat{x}_ {k|k-1}+P_{k|k-1}H^TS_k^{-1}(y_k-\hat{y}_   {k|k-1}),\ 
+P_{k|k-1}-(P_{k|k-1}H^\top)S_k^{-1}(HP_{k|k-1}^\top)\ \right)
 $$
 
 We call term $P_{k|k-1}H^TS_k^{-1}$ a Kalman gain $K_k$. Substituting gives
 
 $$
-x_{k|k} \sim \mathcal{N} (\hat{x}_{k|k}, P_{k|k})
+x_{k|k} \sim \mathcal{N} (\hat{x}_ {k|k}, P_{k|k})
 $$
 
 where
 
 $$
-\hat{x}_{k|k} = \hat{x}_{k|k-1}+K_k(y_k-\hat{y}_{k|k-1})
+\hat{x}_ {k|k} = \hat{x}_ {k|k-1}+K_k(y_k-\hat{y}_   {k|k-1})
 $$
 
 $$
 P_{k|k} = P_{k|k-1}-K_kHP_{k|k-1}
 $$
 
-Here we discard transpose in $P_{k|k-1}^T$ since covariance matrices are symmetric.
+Here we discard transpose in $P_{k|k-1}^\top$ since covariance matrices are symmetric.
 
 ### Kalman Filter Algorithm
-At each time step, the KF trys to predict state estimation $\hat{x}_k$ and state covariance matrix $P_k$ through the following steps:
+At each time step, the KF trys to predict state estimation $\hat{x}_ k$ and state covariance matrix $P_k$ through the following steps:
 
 <table>
   <tr>
     <td><strong>Prediction step</strong><br />(before measurement $y_k$)</td>
-    <td>Predict $x_k$ given only $y _{1:k-1}$<br />$$\hat{x} _{k|k-1} = F\hat{x} _{k-1|k-1}$$ $$P _{k|k-1} = FP _{k-1|k-1}F^T+Q$$</td>
+    <td>Predict $x_k$ given only $y _{1:k-1}$<br />$$\hat{x} _{k|k-1} = F\hat{x} _{k-1|k-1}$$ $$P _{k|k-1} = FP _{k-1|k-1}F^\top+Q$$</td>
   </tr>
   <tr>
     <td><strong>Correction step</strong><br />(after measurement $y_k$)</td>
-    <td>Correct $x_k$ with additional measurement $y_k$<br />$$\hat{x} _{k|k} = \hat{x} _{k|k-1} + K_k(y_k - H\hat{x} _{k|k-1})$$ $$P _{k|k} = P _{k|k-1}-K_kHP _{k|k-1}$$ where $K_k$ is the Kalman gain at time step $k$, which is given by:<br />$K_k = P_{k|k-1}H^T(HP_{k|k-1}H^T + R)^{-1}$</td>
+    <td>Correct $x_k$ with additional measurement $y_k$<br />$$\hat{x} _{k|k} = \hat{x} _{k|k-1} + K_k(y_k - H\hat{x} _{k|k-1})$$ $$P _{k|k} = P _{k|k-1}-K_kHP _{k|k-1}$$ where $K_k$ is the Kalman gain at time step $k$, which is given by:<br />$K_k = P_{k|k-1}H^\top(HP_{k|k-1}H^\top + R)^{-1}$</td>
   </tr>
 </table>
 
@@ -193,7 +195,7 @@ The extended Kalman filter (EKF) is a widely used algorithm for estimating the s
 |-|-|
 **Measurement**|$y_k = h(x_{k}) + v_{k}$
 
-where $f(\cdot)$ and $h(\cdot)$ are non-linear functions and distribution of noise terms are given as $w\sim\mathcal{N}(0, Q)$ and $v\sim\mathcal{N}(0, R)$. In order to use the Kalman filter, we must linearize this model around the current estimate of the state, $\hat{x}_{k-1}$. 
+where $f(\cdot)$ and $h(\cdot)$ are non-linear functions and distribution of noise terms are given as $w\sim\mathcal{N}(0, Q)$ and $v\sim\mathcal{N}(0, R)$. In order to use the Kalman filter, we must linearize this model around the current estimate of the state, $\hat{x}_ {k-1}$. 
 
 ### Linearize
 Consider a non-linear system model of the form:
@@ -202,7 +204,7 @@ $$x_k = f(x_{k-1}) + w_{k}$$
 
 This linearized model is given by:
 
-$$ x_k \approx A\hat{x}_{k-1} + w_{k-1} $$
+$$ x_k \approx A\hat{x}_ {k-1} + w_{k-1} $$
 
 where $A$ is the Jacobian of the non-linear function $f(\cdot)$ evaluated at the current estimate of the state:
 
@@ -212,9 +214,9 @@ Similarly, consider a non-linear measurement model of the form:
 
 $$ y_k = h(x_k) + v_k $$
 
-where $h(\cdot)$ is a non-linear function. In order to use the Kalman filter, we must linearize this model around the current estimate of the state, $\hat{x}_k$. This linearized model is given by:
+where $h(\cdot)$ is a non-linear function. In order to use the Kalman filter, we must linearize this model around the current estimate of the state, $\hat{x}_ k$. This linearized model is given by:
 
-$$ y_k \approx H\hat{x}_k + v_k $$
+$$ y_k \approx H\hat{x}_ k + v_k $$
 
 where $H$ is the Jacobian of the non-linear function $h(\cdot)$ evaluated at the current estimate of the state:
 
@@ -223,16 +225,16 @@ $$ H = \frac{\partial h}{\partial x}(\hat{x} _{k|k-1}) $$
 With these linearized models, we can proceed with the Kalman filter as usual, using the prediction and correction steps described below.
 
 ### Extended Kalman Filter algorithm
-At each time step, the EKF trys to predict state estimation $\hat{x}_k$ and state covariance matrix $P_k$ through the following steps:
+At each time step, the EKF trys to predict state estimation $\hat{x}_ k$ and state covariance matrix $P_k$ through the following steps:
 
 <table>
   <tr>
     <td><strong>Prediction step</strong><br />(before measurement $y_k$)</td>
-    <td>Predict $x_k$ given only $y _{1:k-1}$<br />$$\hat{x} _{k|k-1} = f(\hat{x} _{k-1|k-1})$$ $$P _{k|k-1} = AP _{k-1|k-1}A^T+Q$$</td>
+    <td>Predict $x_k$ given only $y _{1:k-1}$<br />$$\hat{x} _{k|k-1} = f(\hat{x} _{k-1|k-1})$$ $$P _{k|k-1} = AP _{k-1|k-1}A^\top+Q$$</td>
   </tr>
   <tr>
     <td><strong>Correction step</strong><br />(after measurement $y_k$)</td>
-    <td>Correct $x_k$ with additional measurement $y_k$<br />$$\hat{x} _{k|k} = \hat{x} _{k|k-1} + K_k(y_k - h(\hat{x} _{k|k-1}))$$ $$P _{k|k} = P _{k|k-1}-K_kHP _{k|k-1}$$ where $K_k$ is the Kalman gain at time step $k$, which is given by:<br />$K_k = P_{k|k-1}H^T(HP_{k|k-1}H^T + R)^{-1}$</td>
+    <td>Correct $x_k$ with additional measurement $y_k$<br />$$\hat{x} _{k|k} = \hat{x} _{k|k-1} + K_k(y_k - h(\hat{x} _{k|k-1}))$$ $$P _{k|k} = P _{k|k-1}-K_kHP _{k|k-1}$$ where $K_k$ is the Kalman gain at time step $k$, which is given by:<br />$K_k = P_{k|k-1}H^\top(HP_{k|k-1}H^\top + R)^{-1}$</td>
   </tr>
 </table>
 
